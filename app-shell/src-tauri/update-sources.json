@@ -1,0 +1,13 @@
+{
+  "_comment": "更新源配置（占位）。启用方式：将 enabled 置为 true 并把 URL 替换为正式更新服务地址；也可在应用数据目录放同名文件覆盖内置配置。协议见 docs/PACKAGING-UPDATES.md。",
+  "app": {
+    "enabled": false,
+    "manifest": "https://updates.zannen.dev/toolbox/manifest.json"
+  },
+  "plugins": {
+    "zannen.debugger": {
+      "enabled": false,
+      "manifest": "https://updates.zannen.dev/plugins/zannen.debugger/manifest.json"
+    }
+  }
+}

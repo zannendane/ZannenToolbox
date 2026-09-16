@@ -1,0 +1,666 @@
+/**
+ * 调试模块视图样式（仅模块特定部分；通用组件样式在壳的 zt-* 体系）。
+ */
+
+.zd-view {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 100%;
+}
+
+.zd-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.zd-toolbar-label {
+  font-size: 12px;
+  color: var(--zt-text-3);
+}
+
+.zd-error {
+  padding: 10px 14px;
+  border-radius: var(--zt-radius-s);
+  background: var(--zt-critical-soft);
+  border: 1px solid rgba(240, 71, 74, 0.35);
+  color: var(--zt-critical);
+  font-size: 12px;
+}
+
+.zd-hint {
+  color: var(--zt-text-3);
+  font-size: 12px;
+  margin-top: 8px;
+}
+
+.zd-card-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.zd-kv {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 3px 0;
+  font-size: 12px;
+}
+.zd-kv-k {
+  color: var(--zt-text-2);
+}
+.zd-kv-v {
+  font-family: var(--zt-font-mono);
+  color: var(--zt-text-1);
+}
+
+/* ---------- 设备总览 ---------- */
+
+.zd-device-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+.zd-device-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.zd-device-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.zd-device-name {
+  font-size: 14px;
+  font-weight: 650;
+}
+.zd-device-id {
+  font-family: var(--zt-font-mono);
+  font-size: 11px;
+  color: var(--zt-text-3);
+  word-break: break-all;
+}
+.zd-device-meta {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.zd-device-caps {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+.zd-cap {
+  font-size: 10.5px;
+  padding: 1px 7px;
+  border-radius: 4px;
+  background: rgba(110, 139, 255, 0.09);
+  color: var(--zt-text-2);
+  font-family: var(--zt-font-mono);
+}
+.zd-device-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 6px;
+}
+
+/* 已连接会话 chips（多会话并存） */
+.zd-session-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.zd-session-chip {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--zt-glass-border);
+  border-radius: 999px;
+  background: var(--zt-glass-bg);
+  font-size: 11.5px;
+  overflow: hidden;
+}
+.zd-session-chip.is-active {
+  border-color: rgba(110, 139, 255, 0.55);
+  background: var(--zt-accent-soft);
+}
+.zd-session-chip-label {
+  padding: 3px 4px 3px 10px;
+  border: none;
+  background: none;
+  color: var(--zt-text-2);
+  font: inherit;
+  cursor: pointer;
+}
+.zd-session-chip.is-active .zd-session-chip-label {
+  color: var(--zt-text-1);
+  font-weight: 600;
+}
+.zd-session-chip-close {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px 3px 4px;
+  border: none;
+  background: none;
+  color: var(--zt-text-3);
+  cursor: pointer;
+}
+.zd-session-chip-close:hover {
+  color: var(--zt-critical);
+}
+
+/* ---------- 串口终端 ---------- */
+
+.zd-console-wrap {
+  height: 100%;
+}
+.zd-console {
+  flex: 1;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.zd-console-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 14px;
+  font-family: var(--zt-font-mono);
+  font-size: 12px;
+  user-select: text;
+}
+.zd-console-line {
+  display: flex;
+  gap: 10px;
+  line-height: 1.7;
+}
+.zd-console-ts {
+  color: var(--zt-text-3);
+  font-size: 10.5px;
+  flex: none;
+  padding-top: 2px;
+}
+.zd-console-text {
+  word-break: break-all;
+  white-space: pre-wrap;
+}
+.zd-console-rx .zd-console-text {
+  color: var(--zt-text-1);
+}
+.zd-console-tx .zd-console-text {
+  color: var(--zt-accent);
+}
+.zd-console-sys .zd-console-text {
+  color: var(--zt-warn);
+}
+.zd-console-input-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-top: 1px solid var(--zt-glass-border);
+  background: rgba(255, 255, 255, 0.02);
+}
+.zd-console-prompt {
+  color: var(--zt-accent);
+  font-family: var(--zt-font-mono);
+  font-weight: 700;
+}
+.zd-console-input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--zt-text-1);
+  font-family: var(--zt-font-mono);
+  font-size: 12.5px;
+}
+
+/* ---------- 时间轴图表 ---------- */
+
+.zd-chart-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.zd-chart-card {
+  padding: 12px 14px;
+}
+.zd-chart-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.zd-chart-title {
+  font-weight: 600;
+  font-size: 13px;
+}
+.zd-chart-unit {
+  font-size: 11px;
+  color: var(--zt-text-3);
+}
+.zd-chart-host {
+  width: 100%;
+}
+/* uPlot 深色适配 */
+.zd-chart-host .u-legend {
+  font-size: 11px;
+  color: var(--zt-text-2);
+}
+.zd-chart-host .u-legend .u-marker {
+  border-radius: 3px;
+}
+/* 图例整行可点击（隐藏/显示通道），隐藏态由 uPlot 的 .u-off 置灰 */
+.zd-chart-host .u-legend .u-series {
+  cursor: pointer;
+}
+.zd-chart-host .u-legend .u-series:hover .u-label {
+  text-decoration: underline;
+}
+
+/* ---------- 3D 运动 ---------- */
+
+.zd-motion3d-wrap {
+  height: 100%;
+}
+.zd-motion3d-canvas-card {
+  position: relative;
+  flex: 1;
+  min-height: 360px;
+  overflow: hidden;
+}
+.zd-motion3d-canvas {
+  position: absolute;
+  inset: 0;
+}
+.zd-motion3d-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(11, 13, 19, 0.35);
+  backdrop-filter: blur(3px);
+}
+.zd-stream-badge {
+  font-size: 12px;
+  color: var(--zt-text-3);
+}
+.zd-stream-badge.is-live {
+  color: var(--zt-ok);
+}
+.zd-quat-readout {
+  font-family: var(--zt-font-mono);
+  font-size: 11px;
+  color: var(--zt-text-3);
+}
+
+/* ---------- 固件 ---------- */
+
+.zd-steps {
+  display: flex;
+  gap: 8px;
+}
+.zd-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--zt-text-3);
+  background: var(--zt-glass-bg);
+  border: 1px solid var(--zt-glass-border);
+}
+.zd-step-index {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  background: var(--zt-glass-bg-strong);
+}
+.zd-step.is-active {
+  color: var(--zt-text-1);
+  border-color: rgba(110, 139, 255, 0.5);
+}
+.zd-step.is-active .zd-step-index {
+  background: linear-gradient(135deg, var(--zt-accent), var(--zt-accent-2));
+  color: #fff;
+}
+.zd-step.is-done {
+  color: var(--zt-ok);
+}
+.zd-step.is-done .zd-step-index {
+  background: var(--zt-ok-soft);
+  color: var(--zt-ok);
+}
+
+.zd-message {
+  padding: 10px 14px;
+  border-radius: var(--zt-radius-s);
+  font-size: 12px;
+  border: 1px solid transparent;
+}
+.zd-message-ok {
+  background: var(--zt-ok-soft);
+  border-color: rgba(52, 199, 123, 0.35);
+  color: var(--zt-ok);
+}
+.zd-message-warn {
+  background: var(--zt-warn-soft);
+  border-color: rgba(245, 165, 36, 0.35);
+  color: var(--zt-warn);
+}
+.zd-message-critical {
+  background: var(--zt-critical-soft);
+  border-color: rgba(240, 71, 74, 0.35);
+  color: var(--zt-critical);
+}
+.zd-message-muted {
+  background: var(--zt-glass-bg);
+  border-color: var(--zt-glass-border);
+  color: var(--zt-text-2);
+}
+
+.zd-fw-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 14px;
+  align-items: start;
+}
+.zd-fw-file {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.zd-fw-path {
+  font-family: var(--zt-font-mono);
+  font-size: 11px;
+  color: var(--zt-text-2);
+  word-break: break-all;
+}
+.zd-fw-summary {
+  margin-top: 12px;
+  border-top: 1px solid var(--zt-glass-border);
+  padding-top: 8px;
+}
+.zd-fw-boot {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.zd-fw-volumes {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.zd-volume {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 8px 10px;
+  border-radius: var(--zt-radius-s);
+  border: 1px solid var(--zt-glass-border);
+  background: var(--zt-glass-bg);
+  text-align: left;
+  transition: border-color var(--zt-dur-fast);
+}
+.zd-volume.is-active {
+  border-color: rgba(110, 139, 255, 0.55);
+  background: var(--zt-accent-soft);
+}
+.zd-volume-mount {
+  font-family: var(--zt-font-mono);
+  font-size: 12px;
+  color: var(--zt-text-1);
+}
+.zd-volume-info {
+  font-size: 11px;
+  color: var(--zt-text-3);
+}
+.zd-fw-progress {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--zt-font-mono);
+  font-size: 11px;
+  color: var(--zt-text-2);
+}
+.zd-fw-progress .zt-progress {
+  flex: 1;
+}
+
+/* ---------- 状态解读 ---------- */
+
+.zd-status-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+.zd-status-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.zd-status-card.is-warn {
+  border-color: rgba(245, 165, 36, 0.35);
+}
+.zd-status-card.is-critical {
+  border-color: rgba(240, 71, 74, 0.4);
+}
+.zd-status-head {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--zt-text-2);
+  font-size: 12px;
+}
+.zd-status-head .zt-badge {
+  margin-left: auto;
+}
+.zd-status-value {
+  font-size: 26px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+.zd-status-unit {
+  font-size: 12px;
+  color: var(--zt-text-3);
+  margin-left: 3px;
+}
+.zd-status-note {
+  font-size: 11.5px;
+  color: var(--zt-text-2);
+}
+.zd-status-raw {
+  margin-top: 4px;
+}
+.zd-raw-json {
+  font-family: var(--zt-font-mono);
+  font-size: 11.5px;
+  color: var(--zt-text-2);
+  overflow-x: auto;
+  user-select: text;
+}
+
+/* ---------- 亮色模式覆盖 ---------- */
+
+:root[data-theme="light"] .zd-motion3d-overlay {
+  background: rgba(238, 241, 247, 0.55);
+}
+:root[data-theme="light"] .zd-console-input-row {
+  background: rgba(15, 23, 42, 0.03);
+}
+
+/* ---------- 授权前置告知弹窗 ---------- */
+
+.zd-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(11, 13, 19, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+:root[data-theme="light"] .zd-modal-overlay {
+  background: rgba(238, 241, 247, 0.5);
+}
+.zd-modal {
+  width: min(400px, 86vw);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  animation: zd-modal-in 0.24s var(--zt-ease-out);
+}
+@keyframes zd-modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.zd-modal-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: linear-gradient(135deg, var(--zt-accent), var(--zt-accent-2));
+}
+.zd-modal-title {
+  font-size: 15px;
+  font-weight: 650;
+}
+.zd-modal-desc {
+  font-size: 12.5px;
+  color: var(--zt-text-2);
+  line-height: 1.7;
+}
+.zd-modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+/* ---------- 插件框架与设备选择下拉框 ---------- */
+
+.zd-plugin-frame {
+  position: relative;
+  height: 100%;
+}
+/* 默认：插槽内联（顶栏右端），菜单锚定按钮下方 */
+.zd-devsel {
+  position: relative;
+  z-index: 20;
+}
+/* 插槽未就绪的退化形态：视图右上角浮放 */
+.zd-devsel:not(.is-inline) {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+/* 下拉菜单独立于栏位：body 传送门 + fixed 定位（top/right 由 JS 按按钮位置注入） */
+.zd-devsel-menu {
+  z-index: 100;
+  min-width: 240px;
+  transform-origin: top right;
+}
+.zd-devsel-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+}
+.zd-devsel-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  text-align: left;
+}
+.zd-devsel-main .topbar-device-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.zd-devsel-close {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  color: var(--zt-text-3);
+  transition: color var(--zt-dur-fast), background var(--zt-dur-fast);
+}
+.zd-devsel-close:hover {
+  color: var(--zt-critical);
+  background: var(--zt-critical-soft);
+}
+
+/* ---------- 权限被拒通知横幅 ---------- */
+
+.zd-perm-notice {
+  border-color: var(--zt-warn);
+  margin-bottom: 12px;
+}
+.zd-perm-notice-head {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-weight: 600;
+  color: var(--zt-warn);
+  margin-bottom: 6px;
+}
+.zd-perm-notice-desc {
+  color: var(--zt-text-2);
+  font-size: 12.5px;
+  line-height: 1.7;
+}
+.zd-perm-notice-reasons {
+  margin-top: 4px;
+  color: var(--zt-text-3);
+  font-size: 12px;
+  line-height: 1.7;
+}
+.zd-perm-notice-code {
+  margin-top: 6px;
+  font-family: var(--zt-font-mono);
+  font-size: 11px;
+  color: var(--zt-text-3);
+  word-break: break-all;
+}
+.zd-perm-notice-actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+}

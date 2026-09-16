@@ -1,0 +1,133 @@
+# Release 工作流：推送 v* 形式的 tag 时触发。
+# - release-macos：macos-14 上构建 universal2（arm64 + x86_64）的 DMG 与 updater 产物
+#   （.app.tar.gz / .sig），上传为 artifacts 并附加到 Release。
+# - release-windows：windows-2022 上构建 NSIS 安装包及签名（*-setup.exe / .sig），
+#   附加到同一个 Release。
+# 两个 job 共用同一个 draft Release：softprops/action-gh-release 按 tag 复用已存在的
+# Release，第二个完成的 job 直接向其中追加文件。
+# 更新包签名使用 secrets 中的 TAURI_SIGNING_PRIVATE_KEY；
+# TAURI_SIGNING_PRIVATE_KEY_PASSWORD 为空（secret 未配置时解析为空字符串即可）。
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release-macos:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      # stable 工具链，与 rust-toolchain.toml 一致
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: stable
+
+      # universal2 构建需要两个 macOS target
+      - name: 安装 universal2 所需的 Rust targets
+        run: rustup target add aarch64-apple-darwin x86_64-apple-darwin
+
+      # 未指定 version 时自动读取根 package.json 的 packageManager 字段（pnpm@11）
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: 安装依赖
+        run: pnpm install --frozen-lockfile
+
+      # 装配插件到 app-shell/src-tauri/plugins（release 模式；
+      # tauri.conf.json 的 beforeBuildCommand 会再幂等地执行一次同样的装配）
+      - name: 装配 zannen-debugger 插件
+        run: bash scripts/build-plugin.sh zannen-debugger --release
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: 构建 universal2 DMG + updater 产物
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        run: pnpm --dir app-shell exec tauri build --target universal2-apple-darwin --bundles dmg,app
+
+      # DMG 卷图标后处理：替换为安装包（📦）变体（幂等，需 macOS runner）
+      - name: DMG 卷图标替换
+        run: bash scripts/dmg-volicon.sh target/universal2-apple-darwin/release/bundle/dmg/*.dmg
+
+      # 指定 --target 后，bundle 输出在 target/<triple>/release/bundle 下
+      - name: 上传 macOS 产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-bundle
+          path: |
+            target/universal2-apple-darwin/release/bundle/dmg/*.dmg
+            target/universal2-apple-darwin/release/bundle/macos/*.app.tar.gz
+            target/universal2-apple-darwin/release/bundle/macos/*.app.tar.gz.sig
+          if-no-files-found: error
+
+      - name: 附加到 draft Release
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: true
+          tag_name: ${{ github.ref_name }}
+          name: ZannenToolbox ${{ github.ref_name }}
+          files: |
+            target/universal2-apple-darwin/release/bundle/dmg/*.dmg
+            target/universal2-apple-darwin/release/bundle/macos/*.app.tar.gz
+            target/universal2-apple-darwin/release/bundle/macos/*.app.tar.gz.sig
+
+  release-windows:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: stable
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: 安装依赖
+        run: pnpm install --frozen-lockfile
+
+      # 使用 Git Bash 执行装配脚本；脚本内 uname 分支已处理 MSYS/MINGW（拷贝 .dll）
+      - name: 装配 zannen-debugger 插件
+        shell: bash
+        run: bash scripts/build-plugin.sh zannen-debugger --release
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: 构建 NSIS 安装包
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        run: pnpm --dir app-shell exec tauri build --bundles nsis
+
+      - name: 上传 Windows 产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-bundle
+          path: |
+            target/release/bundle/nsis/*-setup.exe
+            target/release/bundle/nsis/*-setup.exe.sig
+          if-no-files-found: error
+
+      - name: 附加到 draft Release
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: true
+          tag_name: ${{ github.ref_name }}
+          name: ZannenToolbox ${{ github.ref_name }}
+          files: |
+            target/release/bundle/nsis/*-setup.exe
+            target/release/bundle/nsis/*-setup.exe.sig

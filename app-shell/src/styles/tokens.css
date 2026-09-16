@@ -1,0 +1,105 @@
+/**
+ * 设计令牌：ZannenToolbox 视觉系统（深色优先）。
+ * 扁平化为底 + Material 层级 + 玻璃拟态表面。
+ */
+
+:root {
+  /* 背景层级（Material elevation 的扁平化表达：明度递增） */
+  --zt-bg-0: #0b0d13;
+  --zt-bg-1: #10131b;
+  --zt-bg-2: #161a24;
+
+  /* 玻璃表面 */
+  --zt-glass-bg: rgba(255, 255, 255, 0.055);
+  --zt-glass-bg-strong: rgba(255, 255, 255, 0.09);
+  --zt-glass-border: rgba(255, 255, 255, 0.1);
+  --zt-glass-border-strong: rgba(255, 255, 255, 0.16);
+  --zt-glass-blur: 18px;
+
+  /* 文本 */
+  --zt-text-1: rgba(255, 255, 255, 0.93);
+  --zt-text-2: rgba(255, 255, 255, 0.62);
+  --zt-text-3: rgba(255, 255, 255, 0.38);
+
+  /* 语义色 */
+  --zt-accent: #6e8bff;
+  --zt-accent-2: #9b7bff;
+  --zt-accent-soft: rgba(110, 139, 255, 0.14);
+  --zt-ok: #34c77b;
+  --zt-ok-soft: rgba(52, 199, 123, 0.14);
+  --zt-warn: #f5a524;
+  --zt-warn-soft: rgba(245, 165, 36, 0.14);
+  --zt-critical: #f0474a;
+  --zt-critical-soft: rgba(240, 71, 74, 0.14);
+
+  /* 圆角 */
+  --zt-radius-s: 8px;
+  --zt-radius-m: 12px;
+  --zt-radius-l: 16px;
+
+  /* 阴影（克制的材质层级） */
+  --zt-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.24);
+  --zt-shadow-2: 0 4px 16px rgba(0, 0, 0, 0.3);
+  --zt-shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.36), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+
+  /* 字体：系统栈，零下载成本 */
+  --zt-font:
+    -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", "PingFang SC",
+    "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+  --zt-font-mono:
+    "SF Mono", ui-monospace, "Cascadia Mono", Consolas, "JetBrains Mono", monospace;
+
+  /* 动效 */
+  --zt-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --zt-dur-fast: 120ms;
+  --zt-dur-med: 240ms;
+
+  /* 布局 */
+  --zt-titlebar-h: 40px;
+  --zt-topbar-h: 52px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --zt-dur-fast: 0ms;
+    --zt-dur-med: 0ms;
+  }
+}
+
+/* ---------- 亮色模式令牌覆盖 ---------- */
+
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --zt-bg-0: #eef1f7;
+  --zt-bg-1: #e6eaf3;
+  --zt-bg-2: #ffffff;
+
+  --zt-glass-bg: rgba(255, 255, 255, 0.55);
+  --zt-glass-bg-strong: rgba(255, 255, 255, 0.78);
+  --zt-glass-border: rgba(15, 23, 42, 0.09);
+  --zt-glass-border-strong: rgba(15, 23, 42, 0.16);
+
+  --zt-text-1: rgba(15, 23, 42, 0.92);
+  --zt-text-2: rgba(15, 23, 42, 0.62);
+  --zt-text-3: rgba(15, 23, 42, 0.42);
+
+  /* 亮底下强调色加深一档保证对比度（WCAG 4.5:1） */
+  --zt-accent: #4f6df5;
+  --zt-accent-2: #8b5cf6;
+  --zt-accent-soft: rgba(79, 109, 245, 0.12);
+  --zt-ok: #0e9f5c;
+  --zt-ok-soft: rgba(14, 159, 92, 0.12);
+  --zt-warn: #b45309;
+  --zt-warn-soft: rgba(180, 83, 9, 0.12);
+  --zt-critical: #dc2626;
+  --zt-critical-soft: rgba(220, 38, 38, 0.1);
+
+  --zt-shadow-1: 0 1px 2px rgba(15, 23, 42, 0.08);
+  --zt-shadow-2: 0 4px 16px rgba(15, 23, 42, 0.1);
+  --zt-shadow-glass: 0 8px 32px rgba(15, 23, 42, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+

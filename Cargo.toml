@@ -1,0 +1,49 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/zannen-plugin-api",
+    "crates/zannen-core",
+    "plugins/zannen-debugger",
+    "plugins/zannen-translator",
+    "app-shell/src-tauri",
+]
+
+[workspace.dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+toml = "0.8"
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "sync", "time", "fs"] }
+libloading = "0.8"
+serialport = "4"
+btleplug = "0.11"
+sysinfo = "0.33"
+tauri = { version = "2", features = ["image-png", "macos-private-api"] }
+tauri-build = { version = "2" }
+tauri-plugin-dialog = "2"
+tauri-plugin-updater = "2"
+tauri-plugin-http = { version = "2", features = ["json"] }
+tauri-plugin-fs = "2"
+tauri-plugin-autostart = "2"
+zip = { version = "2", default-features = false, features = ["deflate"] }
+sha2 = "0.10"
+semver = "1"
+ciborium = "0.2"
+ed25519-dalek = "2"
+base64 = "0.22"
+log = "0.4"
+env_logger = "0.11"
+parking_lot = "0.12"
+cpal = "0.15"
+ureq = { version = "2.12", default-features = false, features = ["tls"] }
+
+# 体积与性能预算：LTO + 单代码生成单元 + 符号剥离 + 体积优化。
+# 保持 panic=unwind（默认）：插件 panic 隔离依赖 catch_unwind。
+[profile.release]
+lto = "fat"
+codegen-units = 1
+strip = true
+opt-level = "z"
+
+[profile.dev.package."*"]
+opt-level = 2

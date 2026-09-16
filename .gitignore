@@ -1,0 +1,25 @@
+# Rust
+target/
+**/*.rs.bk
+
+# Node
+node_modules/
+dist/
+*.tsbuildinfo
+
+# 运行时装配的插件目录（由 scripts/build-plugin.sh 生成）
+app-shell/src-tauri/plugins/
+
+# Tauri
+app-shell/src-tauri/gen/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/*
+!.vscode/extensions.json
+src-tauri/plugins
+app-shell/src/release-notes.json

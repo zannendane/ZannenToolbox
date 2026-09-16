@@ -1,0 +1,89 @@
+# CI 工作流：push 到 main 分支或针对 main 的 Pull Request 时触发。
+# - rust：在 macOS 上执行 fmt 检查、clippy 与全部测试（含 zannen-core 的 mock-transport 特性）。
+#         本仓 macOS 依赖最重（serialport / btleplug 均在 Mac 上验证），故 Rust 任务跑在 macos-14。
+# - frontend：在 Ubuntu 上执行 pnpm install、各前端包 typecheck、构建与 vitest（纯前端不需要 Mac）。
+# - cross-check：在 macOS 上对 x86_64-apple-darwin 目标做 cargo check 交叉检查。
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  rust:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      # 与 rust-toolchain.toml 保持一致（stable + rustfmt + clippy）；
+      # toml 里声明的 x86_64-apple-darwin target 会由 rustup 按需自动安装
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: stable
+          components: rustfmt, clippy
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: rustfmt 检查
+        run: cargo fmt --all -- --check
+
+      - name: clippy（警告即错误）
+        run: cargo clippy --workspace --all-targets -- -D warnings
+
+      - name: 全部测试
+        run: cargo test --workspace
+
+      - name: zannen-core mock-transport 特性测试
+        run: cargo test -p zannen-core --features mock-transport
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # 未指定 version 时自动读取根 package.json 的 packageManager 字段（pnpm@11）。
+      # pnpm-workspace.yaml 已配置 allowBuilds: esbuild: true，esbuild 构建脚本会被允许执行。
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: 安装依赖
+        run: pnpm install --frozen-lockfile
+
+      # app-shell 与 plugins/zannen-debugger/frontend 有 typecheck 脚本，
+      # packages/plugin-sdk 没有，pnpm -r 会自动跳过。
+      - name: 前端 typecheck
+        run: pnpm -r run typecheck
+
+      - name: 前端构建
+        run: pnpm -r --filter "@zannen/*" build
+
+      # 没有 test 脚本的包会被 pnpm -r 跳过（packages/plugin-sdk 无测试）。
+      - name: 前端测试（vitest，有则跑）
+        run: pnpm -r test
+
+  cross-check:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: stable
+
+      - uses: Swatinem/rust-cache@v2
+
+      # rust-toolchain.toml 已声明该 target，这里显式安装一次以便意图清晰（幂等）。
+      - name: 安装 x86_64-apple-darwin target
+        run: rustup target add x86_64-apple-darwin
+
+      - name: 交叉检查 x86_64-apple-darwin
+        run: cargo check --workspace --target x86_64-apple-darwin

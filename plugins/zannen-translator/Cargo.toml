@@ -1,0 +1,18 @@
+[package]
+name = "zannen-translator"
+version = "0.5.0"
+edition = "2021"
+description = "ZannenToolbox 实时翻译插件：麦克风采集 → VAD 分段 → STT → 目标语言翻译"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+zannen-plugin-api = { path = "../../crates/zannen-plugin-api" }
+serde = { workspace = true }
+serde_json = { workspace = true }
+log = { workspace = true }
+cpal = { workspace = true }
+ureq = { workspace = true }
+base64 = { workspace = true }
+tungstenite = { version = "0.26", default-features = false, features = ["handshake", "http", "rustls-tls-webpki-roots"] }

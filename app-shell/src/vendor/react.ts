@@ -1,0 +1,53 @@
+// react 类型包为 export= 形式，`export *` 无法通过类型检查，故显式列举。
+// 新增使用面时在此补充。
+import React from "react";
+
+export default React;
+export {
+  Children,
+  Component,
+  Fragment,
+  PureComponent,
+  StrictMode,
+  Suspense,
+  act,
+  cache,
+  createContext,
+  createElement,
+  createRef,
+  forwardRef,
+  isValidElement,
+  lazy,
+  memo,
+  startTransition,
+  use,
+  useCallback,
+  useContext,
+  useDebugValue,
+  useDeferredValue,
+  useEffect,
+  useId,
+  useImperativeHandle,
+  useInsertionEffect,
+  useLayoutEffect,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  useTransition,
+} from "react";
+export type {
+  ComponentProps,
+  ComponentType,
+  CSSProperties,
+  Dispatch,
+  FC,
+  MutableRefObject,
+  PropsWithChildren,
+  ReactElement,
+  ReactNode,
+  Ref,
+  RefObject,
+  SetStateAction,
+} from "react";

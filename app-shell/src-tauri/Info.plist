@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <!-- Tauri 会把本文件合并进生成的 Info.plist -->
+  <key>NSBluetoothAlwaysUsageDescription</key>
+  <string>ZannenToolbox 使用蓝牙来发现并连接 Zannen 调试设备（BLE 数据通道：串口命令与传感器数据流）。ZannenToolbox uses Bluetooth to discover and connect Zannen debug devices.</string>
+  <key>NSBluetoothPeripheralUsageDescription</key>
+  <string>ZannenToolbox 使用蓝牙来发现并连接 Zannen 调试设备。</string>
+  <key>NSMicrophoneUsageDescription</key>
+  <string>ZannenToolbox 使用麦克风采集语音，用于实时翻译模块的语音识别与翻译（音频仅在您选择的翻译服务中处理）。ZannenToolbox uses the microphone to capture speech for the Live Translate module.</string>
+</dict>
+</plist>

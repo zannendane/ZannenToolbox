@@ -1,0 +1,202 @@
+/**
+ * 基础样式：reset、背景氛围（玻璃拟态所需的底层渐变）、滚动条、选区。
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* html 显式底色：与 NSWindow/WKWebView 底色同令牌，动画暴露区无一处透白；
+   background-color 可过渡——主题切换时底色平滑渐变 */
+html {
+  background-color: var(--zt-bg-0);
+  transition: background-color 0.45s var(--zt-ease-out);
+}
+
+body {
+  font-family: var(--zt-font);
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--zt-text-1);
+  background-color: var(--zt-bg-0);
+  transition:
+    background-color 0.45s var(--zt-ease-out),
+    color 0.45s var(--zt-ease-out);
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+}
+
+/* 背景氛围：暗/亮两层环境光常驻，主题切换时交叉淡入淡出（渐变本身不可过渡，
+   用双层 opacity 交叉淡化实现平滑的色彩渐变过渡）。
+   观感调校：多团大尺寸低透明环境光 + 整层模糊与边缘过扫描——无明确光斑形状、
+   无生硬边界，仅留柔和的明暗氛围；暗色更深邃聚拢，亮色更轻盈通透。
+   光晕层位于底色之上、应用内容之下（.app-frame 显式 z-index:1）。 */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: -6%; /* 过扫描：整层模糊的边缘淡出到视口外，不露 html 底色 */
+  z-index: 0;
+  pointer-events: none;
+  filter: blur(36px);
+  transform: translateZ(0);
+  will-change: opacity;
+  transition: opacity 0.45s var(--zt-ease-out);
+}
+body::before {
+  background:
+    radial-gradient(58% 46% at 16% 6%, rgba(110, 139, 255, 0.17), transparent 74%),
+    radial-gradient(52% 44% at 90% 84%, rgba(155, 123, 255, 0.13), transparent 74%),
+    radial-gradient(44% 36% at 55% 110%, rgba(92, 200, 255, 0.07), transparent 72%),
+    linear-gradient(165deg, #0a0c12 0%, #0e1119 52%, #121623 100%);
+}
+body::after {
+  opacity: 0;
+  background:
+    radial-gradient(58% 46% at 16% 6%, rgba(79, 109, 245, 0.13), transparent 74%),
+    radial-gradient(52% 44% at 90% 84%, rgba(139, 92, 246, 0.1), transparent 74%),
+    radial-gradient(44% 36% at 55% 110%, rgba(56, 189, 248, 0.06), transparent 72%),
+    linear-gradient(165deg, #f3f5fb 0%, #edf0f8 52%, #e8edf7 100%);
+}
+:root[data-theme="light"] body::after {
+  opacity: 1;
+}
+
+::selection {
+  background: rgba(110, 139, 255, 0.32);
+}
+:root[data-theme="light"] ::selection {
+  background: rgba(79, 109, 245, 0.28);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+:root[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: rgba(15, 23, 42, 0.16);
+}
+:root[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(15, 23, 42, 0.26);
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+input,
+textarea,
+[contenteditable] {
+  user-select: text;
+}
+
+button {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--zt-accent);
+  outline-offset: 2px;
+}
+
+/* 应用框架：标题栏 + (侧边栏 + 主区)；显式叠在背景光晕层（z-index:0）之上 */
+.app-frame {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.app-body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.app-main {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.app-content {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 20px 24px 28px;
+}
+
+.plugin-host-view {
+  height: 100%;
+}
+
+.plugin-host-loading {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: var(--zt-text-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---------- overlay 悬浮窗模式（?overlay=<plugin> 窗口，见 App.tsx） ---------- */
+
+/* 窗口本体透明（transparent(true)），背景氛围层与底色一律关闭，
+   由插件 overlay 组件自绘玻璃拟态面板 */
+:root.zt-overlay-mode,
+:root.zt-overlay-mode body {
+  background: transparent;
+  transition: none;
+}
+:root.zt-overlay-mode body::before,
+:root.zt-overlay-mode body::after {
+  display: none;
+}
+:root.zt-overlay-mode ::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+/* OverlayHost 装载/错误占位 */
+.overlay-host-loading {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  color: var(--zt-text-2);
+}

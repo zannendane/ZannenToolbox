@@ -1,0 +1,473 @@
+/**
+ * 实时翻译插件样式：主视图表单/历史 + 悬浮窗玻璃拟态。
+ * 通用组件（卡片/按钮/徽标）沿用壳的 zt-* 类，此处仅模块特定部分。
+ */
+
+/* ---------- 主视图布局 ---------- */
+
+.ztr-view {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ztr-card-title {
+  font-size: 13.5px;
+  font-weight: 650;
+  margin-bottom: 10px;
+}
+
+.ztr-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 14px;
+}
+
+.ztr-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+/* endpoint / apiKey / model 占整行 */
+.ztr-field:nth-child(n + 3) {
+  grid-column: 1 / -1;
+}
+
+.ztr-field-label {
+  font-size: 12px;
+  color: var(--zt-text-2);
+}
+
+.ztr-field-hint {
+  font-size: 11px;
+  color: var(--zt-text-3);
+}
+
+.ztr-input,
+.ztr-select {
+  width: 100%;
+  padding: 7px 10px;
+  font: inherit;
+  color: var(--zt-text-1);
+  background: var(--zt-glass-bg);
+  border: 1px solid var(--zt-glass-border);
+  border-radius: var(--zt-radius-s);
+  outline: none;
+  transition: border-color var(--zt-dur-fast), background var(--zt-dur-fast);
+}
+.ztr-input:focus,
+.ztr-select:focus {
+  border-color: var(--zt-accent);
+}
+.ztr-input:disabled,
+.ztr-select:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.ztr-select option {
+  color: var(--zt-text-1);
+  background: var(--zt-bg-2);
+}
+
+/* ---------- 会话控制行 ---------- */
+
+.ztr-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ztr-controls-spacer {
+  flex: 1;
+}
+
+.ztr-error {
+  padding: 9px 12px;
+  border-radius: var(--zt-radius-s);
+  border: 1px solid var(--zt-critical);
+  background: var(--zt-critical-soft);
+  color: var(--zt-critical);
+  font-size: 12px;
+  line-height: 1.6;
+  word-break: break-all;
+}
+
+/* ---------- 权限被拒通知横幅（同 zd-perm-notice 模式） ---------- */
+
+.ztr-perm-notice {
+  border-color: var(--zt-warn);
+}
+.ztr-perm-notice-head {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-weight: 600;
+  color: var(--zt-warn);
+  margin-bottom: 6px;
+}
+.ztr-perm-notice-desc {
+  color: var(--zt-text-2);
+  font-size: 12.5px;
+  line-height: 1.7;
+}
+.ztr-perm-notice-reasons {
+  margin-top: 4px;
+  color: var(--zt-text-3);
+  font-size: 12px;
+  line-height: 1.7;
+}
+.ztr-perm-notice-code {
+  margin-top: 6px;
+  font-family: var(--zt-font-mono);
+  font-size: 11px;
+  color: var(--zt-text-3);
+  word-break: break-all;
+}
+.ztr-perm-notice-actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+}
+
+/* ---------- 授权前置告知弹窗（同 zd-modal 模式） ---------- */
+
+.ztr-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(11, 13, 19, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+:root[data-theme="light"] .ztr-modal-overlay {
+  background: rgba(238, 241, 247, 0.5);
+}
+.ztr-modal {
+  width: min(400px, 86vw);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  animation: ztr-modal-in 0.24s var(--zt-ease-out);
+}
+@keyframes ztr-modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.ztr-modal-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: linear-gradient(135deg, var(--zt-accent), var(--zt-accent-2));
+}
+.ztr-modal-title {
+  font-size: 15px;
+  font-weight: 650;
+}
+.ztr-modal-desc {
+  font-size: 12.5px;
+  color: var(--zt-text-2);
+  line-height: 1.7;
+}
+.ztr-modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+/* ---------- 会话历史 ---------- */
+
+.ztr-history {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.ztr-history-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 10px;
+  border-radius: var(--zt-radius-s);
+  background: var(--zt-glass-bg);
+  border: 1px solid var(--zt-glass-border);
+}
+
+.ztr-history-line {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+
+.ztr-history-line.is-translation .ztr-history-text {
+  color: var(--zt-text-2);
+}
+
+.ztr-history-text {
+  min-width: 0;
+  font-size: 12.5px;
+  line-height: 1.6;
+  word-break: break-word;
+  user-select: text;
+}
+
+/* ---------- 悬浮窗 overlay ---------- */
+
+.ztr-overlay-root {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(16, 19, 27, 0.72);
+  backdrop-filter: blur(28px) saturate(1.5);
+  -webkit-backdrop-filter: blur(28px) saturate(1.5);
+}
+:root[data-theme="light"] .ztr-overlay-root {
+  border-color: rgba(15, 23, 42, 0.12);
+  background: rgba(255, 255, 255, 0.66);
+}
+
+.ztr-overlay-toolbar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 8px 6px 12px;
+  border-bottom: 1px solid var(--zt-glass-border);
+}
+
+.ztr-overlay-drag {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  align-self: stretch;
+  cursor: grab;
+}
+
+.ztr-overlay-dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--zt-text-3);
+  transition: background var(--zt-dur-med);
+}
+/* 指示灯四态：绿（有语音，随语音脉冲闪烁）/ 灰（静音）/ 红（错误）/ 黄（网络或性能告警） */
+.ztr-overlay-dot.is-speaking,
+.ztr-dot.is-speaking {
+  background: var(--zt-ok);
+  box-shadow: 0 0 6px var(--zt-ok);
+  animation: ztr-overlay-pulse 1.1s var(--zt-ease-out) infinite;
+}
+.ztr-overlay-dot.is-silent,
+.ztr-dot.is-silent {
+  background: var(--zt-text-3);
+}
+.ztr-overlay-dot.is-error,
+.ztr-dot.is-error {
+  background: var(--zt-critical);
+  box-shadow: 0 0 6px var(--zt-critical);
+}
+.ztr-overlay-dot.is-warn,
+.ztr-dot.is-warn {
+  background: var(--zt-warn);
+  box-shadow: 0 0 6px var(--zt-warn);
+}
+.ztr-overlay-dot.is-idle,
+.ztr-dot.is-idle {
+  background: var(--zt-text-3);
+  opacity: 0.5;
+}
+.ztr-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+  vertical-align: 1px;
+  transition: background var(--zt-dur-med);
+}
+@keyframes ztr-overlay-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.ztr-overlay-title {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--zt-text-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ztr-overlay-btn {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
+  color: var(--zt-text-3);
+  transition: color var(--zt-dur-fast), background var(--zt-dur-fast);
+}
+.ztr-overlay-btn:hover {
+  color: var(--zt-text-1);
+  background: var(--zt-glass-bg-strong);
+}
+.ztr-overlay-btn.is-on {
+  color: var(--zt-accent);
+}
+.ztr-overlay-btn.is-close:hover {
+  color: var(--zt-critical);
+  background: var(--zt-critical-soft);
+}
+
+.ztr-overlay-panes {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px 12px;
+}
+
+.ztr-overlay-pane {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 8px 10px;
+  border-radius: var(--zt-radius-m);
+  background: var(--zt-glass-bg);
+  border: 1px solid var(--zt-glass-border);
+}
+
+.ztr-overlay-pane-head {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ztr-overlay-progress {
+  font-size: 11px;
+  color: var(--zt-accent);
+  animation: ztr-overlay-pulse 1.2s var(--zt-ease-out) infinite;
+}
+
+.ztr-overlay-text {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--zt-text-1);
+  word-break: break-word;
+  user-select: text;
+}
+.ztr-overlay-text.is-placeholder {
+  color: var(--zt-text-3);
+  font-size: 12px;
+}
+
+/* ---------- 配置方案 ---------- */
+
+.ztr-profile-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.ztr-profile-row .ztr-input,
+.ztr-profile-row .ztr-select {
+  flex: 1;
+  min-width: 0;
+}
+.ztr-profile-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+.ztr-profile-chip {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--zt-glass-border);
+  border-radius: var(--zt-radius-s);
+  background: var(--zt-glass-bg);
+  overflow: hidden;
+}
+.ztr-profile-chip-apply {
+  padding: 4px 10px;
+  font-size: 12px;
+  color: var(--zt-text-1);
+  transition: background var(--zt-dur-fast);
+}
+.ztr-profile-chip-apply:hover {
+  background: var(--zt-glass-bg-strong);
+}
+.ztr-profile-chip-del {
+  padding: 4px 8px;
+  font-size: 12px;
+  color: var(--zt-text-3);
+  border-left: 1px solid var(--zt-glass-border);
+  transition:
+    color var(--zt-dur-fast),
+    background var(--zt-dur-fast);
+}
+.ztr-profile-chip-del:hover {
+  color: var(--zt-critical);
+  background: var(--zt-critical-soft);
+}
+
+/* ---------- 实时中间结果（partial） ---------- */
+
+.ztr-partial-line {
+  margin-bottom: 8px;
+  font-size: 12.5px;
+  color: var(--zt-text-2);
+  opacity: 0.75;
+  font-style: italic;
+}
+.ztr-overlay-text.is-partial {
+  opacity: 0.7;
+  font-style: italic;
+}
+.ztr-partial-line.is-translation {
+  color: var(--zt-accent);
+}
+
+.ztr-overlay-state {
+  font-size: 11px;
+  color: var(--zt-text-2);
+}

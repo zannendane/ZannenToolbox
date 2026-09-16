@@ -1,0 +1,37 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "主窗口与插件窗口默认能力：事件收发 + 自绘标题栏所需窗口控制",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "core:event:allow-listen",
+    "core:event:allow-unlisten",
+    "core:event:allow-emit",
+    "core:window:allow-start-dragging",
+    "core:window:allow-minimize",
+    "core:window:allow-toggle-maximize",
+    "core:window:allow-close",
+    "core:window:allow-is-maximized",
+    "core:window:allow-set-focus",
+    "core:window:allow-set-theme",
+    "core:window:allow-set-icon",
+    "core:window:allow-set-size",
+    "core:window:allow-center",
+    "core:window:allow-set-position",
+    "core:window:allow-outer-position",
+    "core:window:allow-outer-size",
+    "core:window:allow-scale-factor",
+    "dialog:allow-open",
+    "dialog:allow-save",
+    "autostart:default",
+    "updater:default",
+    "http:default",
+    "fs:allow-write-file",
+    "fs:allow-mkdir",
+    {
+      "identifier": "fs:scope",
+      "allow": ["$TEMP", "$TEMP/*"]
+    }
+  ]
+}

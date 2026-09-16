@@ -1,0 +1,18 @@
+[package]
+name = "zannen-debugger"
+version = "0.5.4"
+edition = "2021"
+description = "ZannenToolbox 调试模块插件：ZannenSmol / SmolAir / Dongle 的识别、UF2 刷写、数据可视化与串口交互"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+zannen-plugin-api = { path = "../../crates/zannen-plugin-api" }
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+log = { workspace = true }
+
+[dev-dependencies]
+tokio = { workspace = true }

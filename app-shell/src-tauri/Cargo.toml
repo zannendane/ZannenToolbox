@@ -1,0 +1,44 @@
+[package]
+name = "zannen-toolbox"
+version = "0.5.8"
+edition = "2021"
+description = "ZannenToolbox 壳程序（Tauri 2）"
+
+[lib]
+name = "zannen_toolbox_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[features]
+# mock 虚拟设备仅开发构建启用（tauri dev --features mock）。
+# 发布版不含 mock，设备列表只呈现真实硬件。
+default = []
+mock = ["zannen-core/mock-transport"]
+
+[build-dependencies]
+tauri-build = { workspace = true }
+
+[dependencies]
+zannen-core = { path = "../../crates/zannen-core" }
+zannen-plugin-api = { path = "../../crates/zannen-plugin-api" }
+tauri = { workspace = true }
+tauri-plugin-dialog = { workspace = true }
+tauri-plugin-updater = { workspace = true }
+tauri-plugin-http = { workspace = true }
+tauri-plugin-fs = { workspace = true }
+tauri-plugin-autostart = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tokio = { workspace = true }
+log = { workspace = true }
+env_logger = { workspace = true }
+
+[target.'cfg(windows)'.dependencies]
+winreg = "0.52"
+
+[target.'cfg(target_os = "macos")'.dependencies]
+objc2 = "0.6"
+objc2-app-kit = "0.3"
+objc2-foundation = "0.3"
+objc2-core-foundation = { version = "0.3", features = ["CFCGTypes"] }
+objc2-quartz-core = { version = "0.3", features = ["CAMediaTimingFunction"] }
+objc2-web-kit = { version = "0.3", features = ["WKWebView"] }

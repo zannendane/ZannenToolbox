@@ -1,0 +1,44 @@
+id = "zannen.debugger"
+name = "Zannen SlimeVR Debug"
+version = "0.5.4"
+api = 1
+description = "ZannenSmol / ZannenSmolAir / ZannenDongle debug module: identification, UF2 flashing, 3D motion, sensor & RF timeline, serial console, status interpretation"
+icon = "bug"
+capabilities = ["serial", "ble", "uf2"]
+
+[backend]
+name = "zannen_debugger"
+
+[frontend]
+entry = "frontend/dist/index.js"
+css = "frontend/dist/style.css"
+
+[[routes]]
+path = "devices"
+title = "Devices"
+icon = "cpu"
+
+[[routes]]
+path = "console"
+title = "Serial Console"
+icon = "terminal"
+
+[[routes]]
+path = "timeline"
+title = "Data Timeline"
+icon = "activity"
+
+[[routes]]
+path = "motion3d"
+title = "3D Motion"
+icon = "box"
+
+[[routes]]
+path = "firmware"
+title = "Firmware"
+icon = "arrow-down-to-line"
+
+[[routes]]
+path = "status"
+title = "Status"
+icon = "stethoscope"

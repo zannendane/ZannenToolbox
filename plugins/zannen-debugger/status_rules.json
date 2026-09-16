@@ -1,0 +1,61 @@
+{
+  "_comment": "状态解读规则表：将设备 status 数据包映射为人类可读卡片。source 为 status 包内字段路径；when 支持 <=/>=/</>/== 后跟数值或字符串，default 兜底；level ∈ ok/warn/critical。",
+  "cards": [
+    {
+      "id": "battery",
+      "title": "电池电量",
+      "icon": "battery-medium",
+      "source": "battery",
+      "unit": "%",
+      "levels": [
+        { "when": "<= 10", "level": "critical", "note": "电量极低，请立即充电" },
+        { "when": "<= 25", "level": "warn", "note": "电量偏低" },
+        { "when": "default", "level": "ok", "note": "电量正常" }
+      ]
+    },
+    {
+      "id": "charging",
+      "title": "充电状态",
+      "icon": "plug-zap",
+      "source": "charging",
+      "unit": "",
+      "levels": [
+        { "when": "== true", "level": "ok", "note": "正在充电" },
+        { "when": "default", "level": "ok", "note": "未充电" }
+      ]
+    },
+    {
+      "id": "imu",
+      "title": "IMU 传感器",
+      "icon": "compass",
+      "source": "imu",
+      "unit": "",
+      "levels": [
+        { "when": "== ok", "level": "ok", "note": "惯性传感器工作正常" },
+        { "when": "default", "level": "critical", "note": "惯性传感器异常，请检查硬件" }
+      ]
+    },
+    {
+      "id": "rf_link",
+      "title": "RF 链路",
+      "icon": "radio-tower",
+      "source": "rf_link",
+      "unit": "",
+      "levels": [
+        { "when": "== good", "level": "ok", "note": "射频链路质量良好" },
+        { "when": "== weak", "level": "warn", "note": "链路偏弱，建议缩短距离或检查天线" },
+        { "when": "default", "level": "critical", "note": "链路中断" }
+      ]
+    },
+    {
+      "id": "fw",
+      "title": "固件版本",
+      "icon": "archive",
+      "source": "fw",
+      "unit": "",
+      "levels": [
+        { "when": "default", "level": "ok", "note": "当前固件版本" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "ZannenToolbox",
+  "version": "0.5.8",
+  "identifier": "dev.zannen.toolbox",
+  "build": {
+    "frontendDist": "../dist",
+    "devUrl": "http://localhost:1420",
+    "beforeDevCommand": "pnpm dev",
+    "beforeBuildCommand": "pnpm build && bash ../scripts/build-plugin.sh zannen-debugger --release"
+  },
+  "app": {
+    "macOSPrivateApi": true,
+    "windows": [
+      {
+        "label": "main",
+        "title": "ZannenToolbox",
+        "width": 420,
+        "height": 840,
+        "minWidth": 400,
+        "minHeight": 560,
+        "resizable": true,
+        "backgroundColor": "#0B0D13",
+        "titleBarStyle": "Overlay",
+        "hiddenTitle": true
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; script-src 'self' blob:; style-src 'self' 'unsafe-inline' plugin-asset: http://plugin-asset.localhost; img-src 'self' data: blob: plugin-asset:; font-src 'self' data:; connect-src 'self' ipc: http://ipc.localhost plugin-asset: http://plugin-asset.localhost; worker-src 'self' blob:"
+    }
+  },
+  "plugins": {
+    "updater": {
+      "active": true,
+      "dialog": false,
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDNDOTM3Rjk4QkYyM0QxRDkKUldUWjBTTy9tSCtUUEdFK3ZXYjRCVXlpdWc5MFRWN0xRSVBacG1sbFpRT28wVnc0MWJ1VzBXNkMK",
+      "endpoints": [
+        "https://updates.zannen.dev/toolbox/{{target}}/{{current_version}}"
+      ]
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["nsis", "dmg"],
+    "category": "DeveloperTool",
+    "shortDescription": "Zannen 硬件调试工具箱",
+    "createUpdaterArtifacts": true,
+    "resources": ["plugins"],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "windows": {
+      "nsis": {
+        "installerIcon": "installer/installer.ico",
+        "headerImage": "installer/header.bmp",
+        "sidebarImage": "installer/sidebar.bmp",
+        "installMode": "both",
+        "languages": ["zh-CN", "en-US"],
+        "displayLanguageSelector": true,
+        "compression": "lzma",
+        "installerHooks": "installer/hooks.nsh",
+        "startMenuFolder": "ZannenToolbox"
+      }
+    },
+    "macOS": {
+      "dmg": {
+        "background": "installer/dmg-background.png",
+        "windowSize": { "width": 660, "height": 400 },
+        "appPosition": { "x": 180, "y": 190 },
+        "applicationFolderPosition": { "x": 480, "y": 190 }
+      }
+    }
+  }
+}

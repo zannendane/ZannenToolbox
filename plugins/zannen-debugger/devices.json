@@ -1,0 +1,67 @@
+{
+  "_comment": "Zannen 硬件指纹表（与 SlimeVR-Tracker-nRF / SlimeVR-Tracker-nRF-Receiver / Adafruit_nRF52_Bootloader 固件仓库对齐）。应用固件对 PC 只有 USB（HID + CDC ACM 控制台），无 BLE/NUS——Tracker↔Dongle 之间是 Nordic ESB 私有 2.4G；BLE 仅存在于 Adafruit UF2 bootloader 的 OTA 模式（广播名 AdaDFU），不用于识别。usb 同时收录应用态与 bootloader 态 VID/PID（VID 0x1209 为 pid.codes 开源 VID）。注意 PID 复用：Smol/SmolAir 应用态共用 0x7692，Dongle/Dongle33 应用态共用 0x7690，需靠 usb_product_patterns（USB product 字符串，最长匹配优先）区分。ble_name_patterns 仅服务 mock 演示与未来固件。hw_names 同时收录 Zephyr board target 名（info 命令 Board: 行）与友好名。",
+  "devices": [
+    {
+      "kind": "zannen-smol",
+      "label": "ZannenSmol 跟踪器",
+      "mcu": "nRF52840",
+      "uf2_family": "0xada52840",
+      "capabilities": ["imu", "rf", "uf2", "serial", "ble"],
+      "match": {
+        "hw_names": ["zannensmol_uf2", "zannen-smol", "zannensmol"],
+        "ble_name_patterns": ["zannen-smol", "zannensmol"],
+        "usb": [{ "vid": "0x1209", "pid": "0x7692" }],
+        "usb_product_patterns": ["SlimeVR ZannenSmol"],
+        "services": []
+      }
+    },
+    {
+      "kind": "zannen-smol-air",
+      "label": "ZannenSmolAir 跟踪器",
+      "mcu": "nRF52833",
+      "uf2_family": "0x621e937a",
+      "capabilities": ["imu", "rf", "uf2", "serial", "ble"],
+      "match": {
+        "hw_names": ["zannensmolair_uf2", "zannen-smol-air", "zannensmolair"],
+        "ble_name_patterns": ["zannen-smolair", "zannensmolair", "zannen-smol-air", "zannenair"],
+        "usb": [
+          { "vid": "0x1209", "pid": "0x7692" },
+          { "vid": "0x1209", "pid": "0x7691" }
+        ],
+        "usb_product_patterns": ["SlimeVR ZannenSmolAir", "ZannenSmolAir"],
+        "services": []
+      }
+    },
+    {
+      "kind": "zannen-dongle",
+      "label": "ZannenDongle 接收器",
+      "mcu": "nRF52840",
+      "uf2_family": "0xada52840",
+      "capabilities": ["rf", "uf2", "serial", "ble"],
+      "match": {
+        "hw_names": ["zannendongle_uf2", "zannen-dongle", "zannendongle"],
+        "ble_name_patterns": ["zannen-dongle", "zannendongle"],
+        "usb": [{ "vid": "0x1209", "pid": "0x7690" }],
+        "usb_product_patterns": ["SlimeNRF Receiver ZannenDongle", "ZannenDongle_nRF52840"],
+        "services": []
+      }
+    },
+    {
+      "kind": "zannen-dongle33",
+      "label": "ZannenDongle33 接收器",
+      "mcu": "nRF52833",
+      "uf2_family": "0x621e937a",
+      "capabilities": ["rf", "uf2", "serial", "ble"],
+      "match": {
+        "hw_names": ["zannendongle33_uf2", "zannen-dongle33", "zannendongle33"],
+        "ble_name_patterns": ["zannen-dongle33", "zannendongle33"],
+        "usb": [
+          { "vid": "0x1209", "pid": "0x7690" },
+          { "vid": "0x1209", "pid": "0x7692" }
+        ],
+        "usb_product_patterns": ["SlimeNRF Receiver ZannenDongle33", "ZannenDongle_nRF52833"],
+        "services": []
+      }
+    }
+  ]
+}

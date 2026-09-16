@@ -1,0 +1,16 @@
+{
+  "name": "zannen-toolbox",
+  "private": true,
+  "version": "0.5.8",
+  "packageManager": "pnpm@11.25.0",
+  "scripts": {
+    "dev": "bash scripts/dev.sh",
+    "build": "pnpm -r --filter @zannen/* build && bash scripts/build-plugin.sh zannen-debugger && cargo build --workspace --release",
+    "build:plugins": "bash scripts/build-plugin.sh zannen-debugger",
+    "build:assets": "node scripts/gen-installer-assets.mjs && swift scripts/gen-themed-icons.swift branding/ZannenToolbox图标-暗色模式.png branding/ZannenToolbox图标-亮色模式.png branding && cd app-shell && pnpm exec tauri icon ../branding/icon-dark.png && cp ../branding/icon-dark-512.png ../branding/icon-light-512.png src-tauri/icons/ && pnpm exec tauri icon ../branding/installer-dark.png -o /tmp/zannen-installer-icons && cp /tmp/zannen-installer-icons/icon.ico src-tauri/installer/installer.ico",
+    "test": "cargo test --workspace",
+    "size-check": "bash scripts/size-check.sh",
+    "bump": "bash scripts/bump-version.sh",
+    "tauri": "pnpm --dir app-shell exec tauri"
+  }
+}

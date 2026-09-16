@@ -1,0 +1,10 @@
+[package]
+name = "zannen-plugin-api"
+version = "0.5.8"
+edition = "2021"
+description = "ZannenToolbox 插件 ABI 契约：宿主与原生动态库插件共用的类型与导出宏"
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
