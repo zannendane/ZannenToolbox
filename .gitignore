@@ -7,8 +7,10 @@ node_modules/
 dist/
 *.tsbuildinfo
 
-# 运行时装配的插件目录（由 scripts/build-plugin.sh 生成）
-app-shell/src-tauri/plugins/
+# 运行时装配的插件目录（由 scripts/build-plugin.sh 生成），保留 .gitkeep 占位
+# （tauri.conf.json 将 plugins/ 声明为资源，目录缺失时 tauri-build 报错）
+app-shell/src-tauri/plugins/*
+!app-shell/src-tauri/plugins/.gitkeep
 
 # Tauri
 app-shell/src-tauri/gen/
