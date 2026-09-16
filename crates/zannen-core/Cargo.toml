@@ -1,6 +1,6 @@
 [package]
 name = "zannen-core"
-version = "0.5.8"
+version = "0.5.9"
 edition = "2021"
 description = "ZannenToolbox 宿主核心：插件管理器、硬件服务（串口/BLE/UF2）、事件总线"
 

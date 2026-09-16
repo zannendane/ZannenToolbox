@@ -4,6 +4,17 @@ All notable changes to this project are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.5.9] - 2026-09-16
+
+### Added
+
+- **插件 GitHub 分发通道**（.github/workflows/plugins.yml）：矩阵编译三平台（macOS aarch64/x86_64 + Windows x64）→ ed25519 签名（`PLUGIN_ED25519_PRIVATE_KEY` secret）→ 逐平台清单片段（gen-plugin-manifest.mjs）→ 合并完整清单（merge-plugin-manifests.mjs）→ 发布/更新本仓库滚动 Release `plugins-latest`（公开仓库匿名可下载，无需独立分发仓）；触发：`plugins-v*` 标签或手动运行
+- 壳内置更新源默认指向该滚动 Release 的 `manifest-<id>.json` 并启用——更新中心一键完成 检查 → 下载 → 验签 → 原子安装 → 热重载；源缺失/离线静默跳过
+
+### Changed
+
+- CI 修复：Node 22（pnpm 11 需 `node:sqlite`）；`plugins/` 目录以 .gitkeep 入库（tauri-build 资源校验）；typecheck 前先生成 release-notes.json
+
 ## [0.5.8] - 2026-09-11
 
 ### Added

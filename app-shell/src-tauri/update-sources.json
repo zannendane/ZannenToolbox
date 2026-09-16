@@ -1,13 +1,17 @@
 {
-  "_comment": "更新源配置（占位）。启用方式：将 enabled 置为 true 并把 URL 替换为正式更新服务地址；也可在应用数据目录放同名文件覆盖内置配置。协议见 docs/PACKAGING-UPDATES.md。",
+  "_comment": "更新源配置。插件：本仓库滚动 Release（plugins-latest 标签，由 .github/workflows/plugins.yml 发布，公开仓库匿名可下载）。本体更新走 tauri-plugin-updater 的 endpoints（tauri.conf.json，发版 Release 资产）。应用数据目录放同名文件可覆盖内置配置。协议见 docs/PACKAGING-UPDATES.md。",
   "app": {
     "enabled": false,
     "manifest": "https://updates.zannen.dev/toolbox/manifest.json"
   },
   "plugins": {
     "zannen.debugger": {
-      "enabled": false,
-      "manifest": "https://updates.zannen.dev/plugins/zannen.debugger/manifest.json"
+      "enabled": true,
+      "manifest": "https://github.com/zannendane/ZannenToolbox/releases/download/plugins-latest/manifest-zannen.debugger.json"
+    },
+    "zannen.translator": {
+      "enabled": true,
+      "manifest": "https://github.com/zannendane/ZannenToolbox/releases/download/plugins-latest/manifest-zannen.translator.json"
     }
   }
 }

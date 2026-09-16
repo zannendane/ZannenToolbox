@@ -6651,7 +6651,7 @@ dependencies = [
 
 [[package]]
 name = "zannen-core"
-version = "0.5.8"
+version = "0.5.9"
 dependencies = [
  "base64 0.22.1",
  "btleplug",
@@ -6689,7 +6689,7 @@ dependencies = [
 
 [[package]]
 name = "zannen-plugin-api"
-version = "0.5.8"
+version = "0.5.9"
 dependencies = [
  "serde",
  "serde_json",
@@ -6698,7 +6698,7 @@ dependencies = [
 
 [[package]]
 name = "zannen-toolbox"
-version = "0.5.8"
+version = "0.5.9"
 dependencies = [
  "env_logger",
  "log",

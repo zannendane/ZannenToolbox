@@ -113,16 +113,23 @@ pnpm build:assets   # 安装器视觉资产 + 主题图标全链路（重生成�
 
 ### 更新源
 
-内置占位 `src-tauri/update-sources.json`（默认 `enabled: false`）；运行时可在应用数据目录放同名文件覆盖：
+内置默认 `src-tauri/update-sources.json`：插件源指向**本仓库滚动 Release `plugins-latest`**（公开仓库匿名可下载，由 `.github/workflows/plugins.yml` 发布）；运行时可在应用数据目录放同名文件覆盖：
 
 ```json
 {
   "app": { "enabled": true, "manifest": "https://…/toolbox/manifest.json" },
   "plugins": {
-    "zannen.debugger": { "enabled": true, "manifest": "https://…/plugins/zannen.debugger/manifest.json" }
+    "zannen.debugger": { "enabled": true, "manifest": "https://github.com/zannendane/ZannenToolbox/releases/download/plugins-latest/manifest-zannen.debugger.json" }
   }
 }
 ```
+
+### 插件分发 CI（plugins.yml）
+
+- 触发：`plugins-v*` 标签或手动 workflow_dispatch；
+- 矩阵构建：macos-14（aarch64）/ macos-13（x86_64）/ windows-2022（x86_64），逐平台构建并签名（`PLUGIN_ED25519_PRIVATE_KEY` secret 写入 `~/.zannen/keys/` 供 sign-plugin.mjs 读取）；
+- 逐平台生成清单片段（`scripts/gen-plugin-manifest.mjs`），publish 汇总合并（`scripts/merge-plugin-manifests.mjs`）；
+- 发布到本仓库滚动 Release `plugins-latest`：`.znplugin` + `.sig` + `manifest-<id>.json`，同名资产覆盖更新；壳更新中心一键检查 → 下载 → 验签 → 原子安装 → 热重载。
 
 ### 插件更新清单（服务端应答）
 

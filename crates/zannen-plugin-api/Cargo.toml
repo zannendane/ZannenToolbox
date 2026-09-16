@@ -1,6 +1,6 @@
 [package]
 name = "zannen-plugin-api"
-version = "0.5.8"
+version = "0.5.9"
 edition = "2021"
 description = "ZannenToolbox 插件 ABI 契约：宿主与原生动态库插件共用的类型与导出宏"
 

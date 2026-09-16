@@ -1,7 +1,7 @@
 {
   "name": "zannen-toolbox",
   "private": true,
-  "version": "0.5.8",
+  "version": "0.5.9",
   "packageManager": "pnpm@11.25.0",
   "scripts": {
     "dev": "bash scripts/dev.sh",

@@ -1,0 +1,117 @@
+# 插件分发工作流：矩阵编译各平台插件 → ed25519 签名 → 生成更新清单 →
+# 发布（或更新）滚动 Release `plugins-latest`（包与 manifest-<id>.json 均为其资产）。
+#
+# 触发：推送 plugins-v* 标签，或手动 workflow_dispatch。
+# 需要的 secret：PLUGIN_ED25519_PRIVATE_KEY（插件签名私钥 PEM，
+# 对应壳内固化的验签公钥 zannen_core::plugin_installer::PLUGIN_SIGNING_PUBKEY_HEX）。
+# 发布使用 GITHUB_TOKEN（本仓库公开，资产可匿名下载）。
+name: Plugin Dist
+
+on:
+  push:
+    tags: ["plugins-v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  DIST_TAG: plugins-latest
+  DIST_BASE_URL: https://github.com/zannendane/ZannenToolbox/releases/download/plugins-latest
+
+jobs:
+  build-plugins:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # macos-14 = Apple Silicon（aarch64），macos-13 = Intel（x86_64）
+          - os: macos-14
+            target: macos-aarch64
+          - os: macos-13
+            target: macos-x86_64
+          - os: windows-2022
+            target: windows-x86_64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@master
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: 安装前端依赖
+        run: pnpm install --frozen-lockfile
+
+      # 签名私钥：PEM 多行内容写入约定路径（sign-plugin.mjs 从该路径读取）
+      - name: 写入插件签名密钥
+        env:
+          PLUGIN_ED25519_PRIVATE_KEY: ${{ secrets.PLUGIN_ED25519_PRIVATE_KEY }}
+        shell: bash
+        run: |
+          mkdir -p "$HOME/.zannen/keys"
+          printf '%s' "$PLUGIN_ED25519_PRIVATE_KEY" > "$HOME/.zannen/keys/plugin-ed25519.pem"
+          chmod 600 "$HOME/.zannen/keys/plugin-ed25519.pem"
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: 构建并签名全部插件
+        run: |
+          bash scripts/build-plugin.sh zannen-debugger --release
+          bash scripts/build-plugin.sh zannen-translator --release
+
+      - name: 生成清单片段
+        shell: bash
+        run: |
+          mkdir -p dist/fragments
+          for pkg in dist/plugins/*.znplugin; do
+            base="$(basename "$pkg" .znplugin)"
+            # 包名约定：<id>-<version>-<os>-<arch>
+            id="${base%%-*}"
+            # id 含点号（zannen.debugger），取到最后一个版本段前的部分
+            id="$(echo "$base" | sed -E 's/-[0-9]+\.[0-9]+\.[0-9]+-[^-]+-[^-]+$//')"
+            node scripts/gen-plugin-manifest.mjs "$id" "${{ matrix.target }}" "$pkg" "$DIST_BASE_URL" \
+              > "dist/fragments/fragment-${id}-${{ matrix.target }}.json"
+          done
+
+      - name: 上传构建产物（供 publish 汇总）
+        uses: actions/upload-artifact@v4
+        with:
+          name: plugin-dist-${{ matrix.target }}
+          path: |
+            dist/plugins/*.znplugin
+            dist/plugins/*.znplugin.sig
+            dist/fragments/*.json
+          if-no-files-found: error
+
+  publish:
+    needs: build-plugins
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 下载全部平台产物
+        uses: actions/download-artifact@v4
+        with:
+          pattern: plugin-dist-*
+          path: dist
+          merge-multiple: true
+
+      - name: 合并清单片段为完整插件清单
+        run: node scripts/merge-plugin-manifests.mjs dist/fragments dist/manifests
+
+      - name: 发布滚动 Release（插件包 + 清单）
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.DIST_TAG }}
+          name: ZannenToolbox Plugins (latest)
+          body: 插件分发滚动 Release：签名 .znplugin 包与更新清单（manifest-<id>.json）。壳软件更新中心从此处一键获取、验签安装并热重载。
+          files: |
+            dist/plugins/*.znplugin
+            dist/plugins/*.znplugin.sig
+            dist/manifests/*.json

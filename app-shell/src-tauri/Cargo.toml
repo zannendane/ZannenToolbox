@@ -1,6 +1,6 @@
 [package]
 name = "zannen-toolbox"
-version = "0.5.8"
+version = "0.5.9"
 edition = "2021"
 description = "ZannenToolbox 壳程序（Tauri 2）"
 
