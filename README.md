@@ -12,7 +12,7 @@
 
 ## 快速开始
 
-前置：Rust stable（rustup）、Node ≥ 20、pnpm；macOS 需 Xcode CLT。
+前置：Rust stable（rustup）、Node ≥ 22、pnpm；macOS 需 Xcode CLT。
 
 ```sh
 pnpm install          # 安装前端依赖
